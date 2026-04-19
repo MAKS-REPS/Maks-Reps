@@ -6,7 +6,7 @@
     <title>Maks Reps | Premium Tools</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare safe.net/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&display=swap');
         body { font-family: 'Inter', sans-serif; background-color: #050505; color: white; overflow-x: hidden; }
@@ -32,6 +32,7 @@
             MAKS<span class="text-red-600">REPS</span>
         </div>
         <div class="flex items-center gap-4">
+            <a :href="discordLink" target="_blank" class="hidden md:block red-glow-btn px-6 py-2 rounded-full font-bold text-xs uppercase tracking-widest">Discord</a>
             <button @click="openMenu = true" class="w-11 h-11 flex items-center justify-center bg-white/5 rounded-xl border border-white/10 hover:bg-white/10 transition">
                 <i class="fa-solid fa-bars-staggered text-xl"></i>
             </button>
@@ -42,9 +43,10 @@
         
         <template x-if="view === 'home'">
             <section class="flex flex-col items-center justify-center text-center px-4 py-20">
-                <h1 class="text-6xl md:text-[90px] font-black leading-tight mb-6 tracking-tighter uppercase">The Ultimate<br><span class="text-red-600">Rep</span> Tool</h1>
+                <h1 class="text-6xl md:text-[90px] font-black leading-tight mb-6 tracking-tighter uppercase">Premium<br><span class="text-red-600">Rep</span> Tools</h1>
+                <p class="max-w-xl text-gray-500 mb-12">Wszystkie narzędzia i najlepsze znaleziska w jednym miejscu.</p>
                 <div class="flex flex-col md:flex-row gap-5">
-                    <button @click="view = 'products'" class="red-glow-btn px-12 py-4 rounded-2xl font-black text-lg uppercase">Przeglądaj Produkty</button>
+                    <button @click="view = 'products'" class="red-glow-btn px-12 py-4 rounded-2xl font-black text-lg uppercase">Przeglądaj Finds</button>
                     <button @click="view = 'converter'" class="bg-white/5 border border-white/10 px-12 py-4 rounded-2xl font-black text-lg hover:bg-white/10 transition uppercase">Link Converter</button>
                 </div>
             </section>
@@ -52,7 +54,7 @@
 
         <template x-if="view === 'products'">
             <section class="max-w-7xl mx-auto px-6">
-                <h2 class="text-4xl font-black uppercase mb-12">Najnowsze <span class="text-red-600">Finds</span></h2>
+                <h2 class="text-4xl font-black uppercase mb-12">Najnowsze <span class="text-red-600">Znaleziska</span></h2>
                 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
                     <template x-for="product in products">
                         <div class="menu-card p-4 rounded-[2.5rem] flex flex-col group">
@@ -62,12 +64,8 @@
                             </div>
                             <h3 class="font-bold text-lg mb-6 px-2 truncate" x-text="product.name"></h3>
                             <div class="grid grid-cols-2 gap-3 px-1">
-                                <a :href="generateCustomLink('kakobuy', product.url)" target="_blank" class="btn-k py-3 flex items-center justify-center text-[10px] uppercase text-white">
-                                    <span class="italic text-sm mr-1">K</span> Kakobuy
-                                </a>
-                                <a :href="generateCustomLink('usfans', product.url)" target="_blank" class="btn-us py-3 flex items-center justify-center text-[10px] uppercase text-white">
-                                    <span class="logo-tag">US</span> Fans
-                                </a>
+                                <a :href="generateCustomLink('kakobuy', product.url)" target="_blank" class="btn-k py-3 flex items-center justify-center text-[10px] uppercase text-white">Kakobuy</a>
+                                <a :href="generateCustomLink('usfans', product.url)" target="_blank" class="btn-us py-3 flex items-center justify-center text-[10px] uppercase text-white">USFans</a>
                             </div>
                         </div>
                     </template>
@@ -79,47 +77,62 @@
             <section class="max-w-3xl mx-auto px-6">
                 <div class="tool-card">
                     <h2 class="text-3xl font-black mb-2 uppercase">Link <span class="text-red-600">Converter</span></h2>
-                    <p class="text-gray-500 mb-8">Wklej link, aby otrzymać wersję afiliacyjną.</p>
-                    <input type="text" x-model="inputUrl" @input="convertLink()" placeholder="Wklej link Weidian/Taobao/1688..." class="w-full p-5 rounded-2xl mb-8 transition text-lg">
-                    
+                    <p class="text-gray-500 mb-8 font-medium">Wklej link, aby otrzymać Twoje wersje afiliacyjne.</p>
+                    <input type="text" x-model="inputUrl" @input="convertLink()" placeholder="Wklej link agenta lub sklepu..." class="w-full p-5 rounded-2xl mb-8 transition text-lg shadow-inner">
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4" x-show="rawUrl" x-cloak>
                         <a :href="generateAgentLink('kakobuy')" target="_blank" class="btn-k p-5 flex justify-between items-center text-white">
-                            <span class="uppercase text-xs font-black"><span class="italic text-lg mr-1">K</span> Kakobuy</span>
-                            <i class="fa-solid fa-arrow-right"></i>
+                            <span class="uppercase text-xs font-black">Kakobuy</span><i class="fa-solid fa-arrow-right"></i>
                         </a>
                         <a :href="generateAgentLink('usfans')" target="_blank" class="btn-us p-5 flex justify-between items-center text-white">
-                            <span class="uppercase text-xs font-black"><span class="logo-tag">US</span> USFans</span>
-                            <i class="fa-solid fa-arrow-right"></i>
+                            <span class="uppercase text-xs font-black">USFans</span><i class="fa-solid fa-arrow-right"></i>
                         </a>
                         <a :href="generateAgentLink('acbuy')" target="_blank" class="btn-ac p-5 flex justify-between items-center text-black">
-                            <span class="uppercase text-xs font-black"><span class="logo-tag !border-black">AC</span> ACBuy</span>
-                            <i class="fa-solid fa-arrow-right"></i>
+                            <span class="uppercase text-xs font-black">ACBuy</span><i class="fa-solid fa-arrow-right"></i>
                         </a>
                         <div @click="copyRaw()" class="btn-raw p-5 flex justify-between items-center cursor-pointer">
-                            <span class="uppercase text-xs font-black text-gray-400">Copy RAW Link</span>
-                            <i class="fa-solid fa-copy"></i>
+                            <span class="uppercase text-xs font-black text-gray-400">Copy RAW Link</span><i class="fa-solid fa-copy"></i>
                         </div>
                     </div>
                 </div>
             </section>
         </template>
 
+        <template x-if="view === 'calculator'">
+            <section class="max-w-3xl mx-auto px-6">
+                <div class="tool-card">
+                    <h2 class="text-3xl font-black mb-2 uppercase text-red-600">Ship Calculator</h2>
+                    <p class="text-gray-500 mb-8 font-medium italic">Szacunkowe koszty wysyłki do Polski (PLN).</p>
+                    <div class="mb-10 max-w-sm">
+                        <label class="block text-[10px] font-black text-gray-500 uppercase tracking-widest mb-3 px-1">Waga (Gramy)</label>
+                        <input type="number" x-model="weight" placeholder="np. 4000" class="w-full p-5 rounded-2xl text-xl font-bold transition">
+                    </div>
+                    <div class="grid grid-cols-1 gap-4" x-show="weight > 0" x-cloak>
+                        <div class="bg-white/5 p-6 rounded-3xl border border-white/5 flex justify-between items-center">
+                            <span class="font-black uppercase text-xs">Kakobuy</span>
+                            <span class="text-2xl font-black text-red-500" x-text="calcShipping(weight, 'kakobuy') + ' PLN'"></span>
+                        </div>
+                        <div class="bg-white/5 p-6 rounded-3xl border border-white/5 flex justify-between items-center">
+                            <span class="font-black uppercase text-xs">USFans</span>
+                            <span class="text-2xl font-black text-blue-500" x-text="calcShipping(weight, 'usfans') + ' PLN'"></span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </template>
     </main>
 
     <div x-show="openMenu" class="fixed inset-0 z-[100]" x-cloak>
         <div class="absolute inset-0 bg-black/80 backdrop-blur-md" @click="openMenu = false"></div>
-        <div class="absolute inset-y-0 right-0 w-full md:w-[400px] bg-[#080808] p-8 shadow-2xl border-l border-white/5" x-transition>
+        <div class="absolute inset-y-0 right-0 w-full md:w-[400px] bg-[#080808] p-8 shadow-2xl border-l border-white/5 overflow-y-auto" x-transition>
             <div class="flex justify-between items-center mb-10">
                 <h2 class="text-2xl font-black uppercase">Menu</h2>
                 <button @click="openMenu = false" class="w-10 h-10 flex items-center justify-center bg-white/5 rounded-xl"><i class="fa-solid fa-xmark"></i></button>
             </div>
             <div class="space-y-3">
-                <div @click="view = 'products'; openMenu = false" class="menu-card p-4 rounded-2xl flex items-center gap-4">
-                    <div class="icon-box"><i class="fa-solid fa-magnifying-glass"></i></div><span class="font-bold">Browse Finds</span>
-                </div>
-                <div @click="view = 'converter'; openMenu = false" class="menu-card p-4 rounded-2xl flex items-center gap-4">
-                    <div class="icon-box"><i class="fa-solid fa-link"></i></div><span class="font-bold">Link Converter</span>
-                </div>
+                <div @click="view = 'products'; openMenu = false" class="menu-card p-4 rounded-2xl flex items-center gap-4"><div class="icon-box"><i class="fa-solid fa-magnifying-glass"></i></div><span class="font-bold">Browse Finds</span></div>
+                <div @click="view = 'converter'; openMenu = false" class="menu-card p-4 rounded-2xl flex items-center gap-4"><div class="icon-box"><i class="fa-solid fa-link"></i></div><span class="font-bold">Link Converter</span></div>
+                <div @click="view = 'calculator'; openMenu = false" class="menu-card p-4 rounded-2xl flex items-center gap-4"><div class="icon-box"><i class="fa-solid fa-calculator"></i></div><span class="font-bold">Ship Calculator</span></div>
+                <a :href="discordLink" target="_blank" class="menu-card p-4 rounded-2xl flex items-center gap-4 border-red-600/30 bg-red-600/5"><div class="icon-box !text-red-500"><i class="fa-brands fa-discord"></i></div><span class="font-bold">Join Discord</span></a>
             </div>
         </div>
     </div>
@@ -127,42 +140,22 @@
     <script>
         function siteHandler() {
             return {
-                view: 'home',
-                openMenu: false,
-                inputUrl: '',
-                rawUrl: '',
+                view: 'home', openMenu: false, inputUrl: '', rawUrl: '', weight: '',
+                discordLink: 'https://discord.gg/DTb5mkpNuH',
                 aff: { kakobuy: 'maksr3ps', usfans: 'DJPZ6T', acbuy: 'KV2WLD' },
-                
                 products: [
-                    {
-                        name: "Numeris",
-                        pricePLN: "180",
-                        image: "https://cdn.discordapp.com/attachments/1484846186153250898/1484846186652369029/pcitem1238871281-06220000019a9e195a380a23041a-unadjust_1080_1080.png",
-                        url: "https://weidian.com/item.html?itemID=7614479098"
-                    },
-                    {
-                        name: "Spodnie ADWYSD",
-                        pricePLN: "45",
-                        image: "https://file.uufinds.com/product/2026/04/15/2044313412956188673/major/2c92808a9d6ac29f019d8fffa56c38c0.webp",
-                        url: "https://weidian.com/item.html?itemID=7231456188"
-                    }
+                    { name: "Numeris", pricePLN: "180", image: "https://cdn.discordapp.com/attachments/1484846186153250898/1484846186652369029/pcitem1238871281-06220000019a9e195a380a23041a-unadjust_1080_1080.png", url: "https://weidian.com/item.html?itemID=7614479098" },
+                    { name: "Spodnie ADWYSD", pricePLN: "45", image: "https://file.uufinds.com/product/2026/04/15/2044313412956188673/major/2c92808a9d6ac29f019d8fffa56c38c0.webp", url: "https://weidian.com/item.html?itemID=7231456188" }
                 ],
-
                 convertLink() {
                     let val = this.inputUrl.trim();
                     if (!val) { this.rawUrl = ''; return; }
                     if (val.includes('url=')) {
                         let params = new URLSearchParams(val.split('?')[1]);
                         this.rawUrl = decodeURIComponent(params.get('url'));
-                    } else {
-                        this.rawUrl = val;
-                    }
+                    } else { this.rawUrl = val; }
                 },
-
-                generateAgentLink(agent) {
-                    return this.generateCustomLink(agent, this.rawUrl);
-                },
-
+                generateAgentLink(agent) { return this.generateCustomLink(agent, this.rawUrl); },
                 generateCustomLink(agent, url) {
                     if (!url) return '#';
                     let encoded = encodeURIComponent(url);
@@ -170,11 +163,11 @@
                     if (agent === 'usfans') return `https://www.usfans.com/product/search?url=${encoded}&ref=${this.aff.usfans}`;
                     if (agent === 'acbuy') return `https://www.acbuy.com/product-detail?url=${encoded}&ref=${this.aff.acbuy}`;
                 },
-
-                copyRaw() {
-                    navigator.clipboard.writeText(this.rawUrl);
-                    alert('Skopiowano link RAW!');
-                }
+                calcShipping(g, agent) {
+                    let kg = g / 1000;
+                    return agent === 'kakobuy' ? Math.round(45 + (kg * 62)) : Math.round(42 + (kg * 59));
+                },
+                copyRaw() { navigator.clipboard.writeText(this.rawUrl); alert('Skopiowano!'); }
             }
         }
     </script>
