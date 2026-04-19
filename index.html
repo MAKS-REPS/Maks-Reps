@@ -23,13 +23,13 @@
         .menu-tile:hover { background-color: #161616; border-color: #333; }
         .menu-icon-box { background-color: #1a1a1a; width: 44px; height: 44px; display: flex; align-items: center; justify-content: center; border-radius: 12px; color: #666; font-size: 18px; }
 
-        /* Mniejsze przyciski agentów */
-        .agent-btn { border-radius: 10px; font-weight: 900; text-transform: uppercase; font-size: 11px; transition: 0.2s; padding: 10px 14px; width: 100%; display: flex; align-items: center; gap: 10px; }
+        /* Styl przycisków w konwerterze */
+        .agent-btn { border-radius: 10px; font-weight: 900; text-transform: uppercase; font-size: 11px; transition: 0.2s; padding: 10px 14px; width: 100%; display: flex; align-items: center; gap: 12px; }
         .btn-kako { background-color: #ff5c5c; color: white; }
         .btn-usf { background-color: #3b82f6; color: white; }
         .btn-acb { background-color: #00d1b2; color: #000; }
         
-        .agent-logo { width: 24px; height: 24px; border-radius: 50%; object-fit: cover; border: 1px solid rgba(255,255,255,0.2); }
+        .agent-logo { width: 24px; height: 24px; border-radius: 50%; object-fit: cover; border: 1px solid rgba(255,255,255,0.2); flex-shrink: 0; }
 
         .flag-icon { width: 28px; cursor: pointer; opacity: 0.3; transition: 0.2s; border: 2px solid transparent; padding: 1px; }
         .flag-icon.active { opacity: 1; border-color: #ff0000; border-radius: 4px; }
@@ -95,25 +95,27 @@
                         <h2 class="text-3xl font-black uppercase tracking-tighter" x-text="t.convTitle"></h2>
                     </div>
                     <p class="text-gray-500 mb-8 font-medium" x-text="t.convDesc"></p>
+                    
                     <input type="text" x-model="inputUrl" @input="convertLink()" :placeholder="t.convPlace" class="w-full p-6 rounded-2xl mb-8 transition text-lg border border-white/10 bg-white/5 outline-none focus:border-red-600/50">
                     
                     <div class="space-y-3" x-show="botResult" x-cloak>
-                        <div class="p-4 bg-white/5 rounded-xl border border-white/10 text-xs font-mono text-red-400 truncate mb-2" x-text="botResult.cleanUrl"></div>
+                        <div class="p-4 bg-white/5 rounded-xl border border-white/10 text-xs font-mono text-red-400 truncate mb-4" x-text="botResult.cleanUrl"></div>
+                        
                         <div class="grid grid-cols-1 gap-3">
                             <a :href="botResult.kako" target="_blank" class="agent-btn btn-kako">
-                                <img src="93cdc899-d049-4e14-b9dc-da46991af388" class="agent-logo">
+                                <img src="image.png-5ecbb510-85c1-4fb6-9c45-2dbf4ff78ca8" class="agent-logo">
                                 <span class="flex-grow">Kakobuy</span>
-                                <i class="fa-solid fa-arrow-right opacity-50"></i>
+                                <i class="fa-solid fa-arrow-right opacity-30"></i>
                             </a>
                             <a :href="botResult.usf" target="_blank" class="agent-btn btn-usf">
-                                <img src="4aa3d012-a2ee-4908-865b-5c17fb8c9ef7" class="agent-logo">
+                                <img src="image.png-0d64306f-046b-477c-a269-928787ac2f09" class="agent-logo">
                                 <span class="flex-grow">USFans</span>
-                                <i class="fa-solid fa-arrow-right opacity-50"></i>
+                                <i class="fa-solid fa-arrow-right opacity-30"></i>
                             </a>
                             <a :href="botResult.acb" target="_blank" class="agent-btn btn-acb">
-                                <img src="298b7f95-936a-4fec-8fbc-7007e79a4015" class="agent-logo">
+                                <img src="image.png-3eda17a6-4afd-446e-aa94-831bd9860af7" class="agent-logo">
                                 <span class="flex-grow">ACBuy</span>
-                                <i class="fa-solid fa-arrow-right opacity-50"></i>
+                                <i class="fa-solid fa-arrow-right opacity-30"></i>
                             </a>
                         </div>
                     </div>
@@ -245,17 +247,9 @@
                         name: "Numeris",
                         pricePLN: "180",
                         priceUSD: "45",
-                        image: "https://cdn.discordapp.com/attachments/1484846186153250898/1484846186652369029/pcitem1238871281-06220000019a9e195a380a23041a-unadjust_1080_1080.png",
+                        image: "https://file.uufinds.com/product/2026/04/15/2044313412956188673/major/2c92808a9d6ac29f019d8fffa56c38c0.webp",
                         kakobuy: "https://www.kakobuy.com/item/details?url=https%3A%2F%2Fweidian.com%2Fitem.html%3FitemID%3D7614479098&affcode=maksr3ps",
                         usfans: "https://www.usfans.com/product/3/7614479098/?ref=DJPZ6T"
-                    },
-                    {
-                        name: "Spodnie ADWYSD",
-                        pricePLN: "45",
-                        priceUSD: "11",
-                        image: "https://file.uufinds.com/product/2026/04/15/2044313412956188673/major/2c92808a9d6ac29f019d8fffa56c38c0.webp",
-                        kakobuy: "https://ikako.vip/ejqfc",
-                        usfans: "https://www.usfans.com/product/2/915690707683/?ref=DJPZ6T"
                     }
                 ],
                 init() { this.setLang(this.lang); },
