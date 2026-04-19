@@ -31,8 +31,8 @@
         <div class="text-2xl font-black tracking-tighter cursor-pointer uppercase" @click="view = 'home'">
             MAKS<span class="text-red-600">REPS</span>
         </div>
-        <button @click="openMenu = true" class="w-11 h-11 flex items-center justify-center bg-white/5 rounded-xl border border-white/10 hover:bg-white/10 transition">
-            <i class="fa-solid fa-bars-staggered text-xl text-white"></i>
+        <button @click="openMenu = true" class="w-11 h-11 flex items-center justify-center bg-white/5 rounded-xl border border-white/10 hover:bg-white/10 transition text-white">
+            <i class="fa-solid fa-bars-staggered text-xl"></i>
         </button>
     </nav>
 
@@ -61,8 +61,8 @@
                             </div>
                             <h3 class="font-bold text-lg mb-6 px-2 truncate" x-text="product.name"></h3>
                             <div class="grid grid-cols-2 gap-3 px-1">
-                                <a :href="generateBotLinks(product.url).kako" target="_blank" class="btn-k py-3 flex items-center justify-center text-[10px] uppercase">Kakobuy</a>
-                                <a :href="generateBotLinks(product.url).usf" target="_blank" class="btn-us py-3 flex items-center justify-center text-[10px] uppercase">USFans</a>
+                                <a :href="processUrl(product.url).kako" target="_blank" class="btn-k py-3 flex items-center justify-center text-[10px] uppercase">Kakobuy</a>
+                                <a :href="processUrl(product.url).usf" target="_blank" class="btn-us py-3 flex items-center justify-center text-[10px] uppercase">USFans</a>
                             </div>
                         </div>
                     </template>
@@ -74,24 +74,36 @@
             <section class="max-w-3xl mx-auto px-6 animate-fade">
                 <div class="tool-card">
                     <div class="flex items-center gap-3 mb-2">
-                        <i class="fa-solid fa-robot text-red-600"></i>
+                        <i class="fa-solid fa-robot text-red-600 text-2xl"></i>
                         <h2 class="text-3xl font-black uppercase">Bot <span class="text-red-600">Converter</span></h2>
                     </div>
-                    <p class="text-gray-500 mb-8 font-medium">Wklej link, aby otrzymać wersję afiliacyjną (Logika bota).</p>
+                    <p class="text-gray-500 mb-8 font-medium">Wklej link Taobao/Weidian/1688 – resztę zrobię za Ciebie.</p>
                     
-                    <input type="text" x-model="inputUrl" @input="updateLinks()" placeholder="Wklej link Taobao/Weidian/1688..." class="w-full p-5 rounded-2xl mb-8 transition text-lg border border-white/10">
+                    <input type="text" x-model="inputUrl" @input="convertLink()" placeholder="Wklej link tutaj..." class="w-full p-5 rounded-2xl mb-8 transition text-lg border border-white/10">
                     
-                    <div class="grid grid-cols-1 gap-4" x-show="botResult" x-cloak>
-                        <div class="p-4 bg-white/5 rounded-xl border border-white/10 mb-2">
-                            <p class="text-[10px] font-black text-gray-500 uppercase tracking-widest mb-1">Wykryty Link RAW</p>
-                            <p class="text-sm font-bold truncate text-red-500" x-text="botResult.cleanUrl"></p>
+                    <div class="space-y-4" x-show="botResults" x-cloak>
+                        <div class="p-4 bg-white/5 rounded-xl border-l-4 border-red-600 mb-6">
+                            <p class="text-[10px] font-black text-gray-500 uppercase tracking-widest">Wykryto produkt:</p>
+                            <p class="text-sm font-bold truncate text-white" x-text="botResults.cleanUrl"></p>
+                        </div>
+
+                        <div class="grid grid-cols-1 gap-3">
+                            <a :href="botResults.kako" target="_blank" class="btn-k p-5 flex justify-between items-center group">
+                                <span class="uppercase font-black text-sm tracking-widest">✨ Kup na Kakobuy</span>
+                                <i class="fa-solid fa-arrow-right group-hover:translate-x-2 transition"></i>
+                            </a>
+                            <a :href="botResults.usf" target="_blank" class="btn-us p-5 flex justify-between items-center group">
+                                <span class="uppercase font-black text-sm tracking-widest">🚀 Kup na USFans</span>
+                                <i class="fa-solid fa-arrow-right group-hover:translate-x-2 transition"></i>
+                            </a>
+                            <a :href="botResults.acb" target="_blank" class="btn-ac p-5 flex justify-between items-center group">
+                                <span class="uppercase font-black text-sm tracking-widest">📦 Kup na ACBuy</span>
+                                <i class="fa-solid fa-arrow-right group-hover:translate-x-2 transition"></i>
+                            </a>
                         </div>
                         
-                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                            <a :href="botResult.kako" target="_blank" class="btn-k p-5 flex justify-between items-center text-white"><span class="uppercase text-xs font-black">✨ Kakobuy</span><i class="fa-solid fa-arrow-right"></i></a>
-                            <a :href="botResult.usf" target="_blank" class="btn-us p-5 flex justify-between items-center text-white"><span class="uppercase text-xs font-black">🚀 USFans</span><i class="fa-solid fa-arrow-right"></i></a>
-                            <a :href="botResult.acb" target="_blank" class="btn-ac p-5 flex justify-between items-center text-black"><span class="uppercase text-xs font-black">📦 ACBuy</span><i class="fa-solid fa-arrow-right"></i></a>
-                            <div @click="copyRaw(botResult.cleanUrl)" class="bg-[#333] p-5 rounded-xl flex justify-between items-center cursor-pointer text-gray-400 font-bold hover:bg-[#444] transition"><span class="uppercase text-xs">Copy RAW</span><i class="fa-solid fa-copy"></i></div>
+                        <div @click="copyRaw(botResults.cleanUrl)" class="w-full py-4 bg-white/5 rounded-xl border border-white/10 flex justify-center items-center gap-2 cursor-pointer hover:bg-white/10 transition text-gray-400 font-bold text-xs uppercase">
+                            <i class="fa-solid fa-copy"></i> Skopiuj czysty link (RAW)
                         </div>
                     </div>
                 </div>
@@ -128,13 +140,13 @@
 
     <div x-show="openMenu" class="fixed inset-0 z-[100]" x-cloak>
         <div class="absolute inset-0 bg-black/80 backdrop-blur-md" @click="openMenu = false"></div>
-        <div class="absolute inset-y-0 right-0 w-full md:w-[400px] bg-[#080808] p-8 shadow-2xl border-l border-white/5 overflow-y-auto text-white" x-transition>
-            <div class="flex justify-between items-center mb-10">
+        <div class="absolute inset-y-0 right-0 w-full md:w-[400px] bg-[#080808] p-8 shadow-2xl border-l border-white/5 overflow-y-auto" x-transition>
+            <div class="flex justify-between items-center mb-10 text-white">
                 <h2 class="text-2xl font-black uppercase tracking-tighter">Menu</h2>
                 <button @click="openMenu = false" class="w-10 h-10 bg-white/5 rounded-xl"><i class="fa-solid fa-xmark"></i></button>
             </div>
             
-            <div class="space-y-3 mb-10">
+            <div class="space-y-3 mb-10 text-white">
                 <div @click="view = 'products'; openMenu = false" class="menu-card p-4 rounded-2xl flex items-center gap-4"><div class="icon-box"><i class="fa-solid fa-magnifying-glass"></i></div><span class="font-bold uppercase text-xs">Browse Finds</span></div>
                 <div @click="view = 'converter'; openMenu = false" class="menu-card p-4 rounded-2xl flex items-center gap-4"><div class="icon-box"><i class="fa-solid fa-robot"></i></div><span class="font-bold uppercase text-xs">Link Converter</span></div>
                 <div @click="view = 'qc'; openMenu = false" class="menu-card p-4 rounded-2xl flex items-center gap-4"><div class="icon-box"><i class="fa-solid fa-camera"></i></div><span class="font-bold uppercase text-xs">Quality Checks</span></div>
@@ -142,11 +154,11 @@
                 <a :href="discordLink" target="_blank" class="menu-card p-4 rounded-2xl flex items-center gap-4 border-red-600/30 bg-red-600/5 text-white"><div class="icon-box !text-red-500"><i class="fa-brands fa-discord"></i></div><span class="font-bold uppercase text-xs">Discord</span></a>
             </div>
 
-            <div class="border-t border-white/5 pt-8">
+            <div class="border-t border-white/5 pt-8 text-white">
                 <h3 class="text-[10px] font-black text-gray-500 uppercase tracking-[0.2em] mb-4">Ustawienia</h3>
                 <div class="grid grid-cols-2 gap-3">
-                    <button @click="toggleLang()" class="bg-white/5 p-4 rounded-xl text-xs font-bold border border-white/10 uppercase" x-text="'Język: ' + lang"></button>
-                    <button @click="toggleCurrency()" class="bg-white/5 p-4 rounded-xl text-xs font-bold border border-white/10 uppercase" x-text="'Waluta: ' + currency"></button>
+                    <button @click="toggleLang()" class="bg-white/5 p-4 rounded-xl text-xs font-bold border border-white/10 uppercase hover:bg-white/10" x-text="'Język: ' + lang"></button>
+                    <button @click="toggleCurrency()" class="bg-white/5 p-4 rounded-xl text-xs font-bold border border-white/10 uppercase hover:bg-white/10" x-text="'Waluta: ' + currency"></button>
                 </div>
             </div>
         </div>
@@ -155,7 +167,7 @@
     <script>
         function siteHandler() {
             return {
-                view: 'home', openMenu: false, lang: 'PL', currency: 'PLN', inputUrl: '', botResult: null, weight: '', qcUrl: '',
+                view: 'home', openMenu: false, lang: 'PL', currency: 'PLN', inputUrl: '', botResults: null, weight: '', qcUrl: '',
                 discordLink: 'https://discord.gg/DTb5mkpNuH',
                 aff: { kakobuy: 'maksr3ps', usfans: 'DJPZ6T', acbuy: 'KV2WLD' },
                 t: {},
@@ -164,70 +176,63 @@
                     EN: { heroTitle: 'The Ultimate<br><span class="text-red-600">Rep</span> Tool', browseBtn: 'Browse Store', latest: 'Latest' }
                 },
                 products: [
-                    { name: "Numeris", pricePLN: "180", priceUSD: "45", image: "https://photos.pandalabs.io/jacket-trapstar-black.jpg", url: "https://weidian.com/item.html?itemID=7614479098" },
+                    { name: "Trapstar Jacket", pricePLN: "180", priceUSD: "45", image: "https://photos.pandalabs.io/jacket-trapstar-black.jpg", url: "https://weidian.com/item.html?itemID=5279434461" },
                     { name: "Spodnie ADWYSD", pricePLN: "45", priceUSD: "12", image: "https://photos.pandalabs.io/aj4-black-cat.jpg", url: "https://weidian.com/item.html?itemID=7231456188" }
                 ],
                 init() { this.t = this.translations[this.lang]; },
                 toggleLang() { this.lang = this.lang === 'PL' ? 'EN' : 'PL'; this.t = this.translations[this.lang]; },
                 toggleCurrency() { this.currency = this.currency === 'PLN' ? 'USD' : 'PLN'; },
+                
+                // LOGIKA BOTA - Wyciąganie ID i tworzenie linków
+                processUrl(url) {
+                    if (!url) return null;
+                    let clean = url.trim().split('?')[0];
+                    let id = "";
+                    let usfType = "1"; // Default for Taobao/Weidian
+                    let acSource = "TB"; 
 
-                // LOGIKA BOTA (Zgodna z Twoim kodem Python)
-                generateBotLinks(url) {
-                    let product_id = "";
-                    let usf_type = "1";
-                    let ac_type = "TB";
-                    let clean_url = url;
-
-                    const lowUrl = url.toLowerCase();
-
-                    // Taobao / Tmall
-                    if (lowUrl.includes("taobao.com") || lowUrl.includes("tmall.com")) {
-                        let m = url.match(/id=(\d+)/);
-                        if (m) {
-                            product_id = m[1];
-                            usf_type = "1";
-                            ac_type = "TB";
-                            clean_url = `https://item.taobao.com/item.htm?id=${product_id}`;
+                    // Wykrywanie Taobao / Tmall
+                    if (url.includes("taobao.com") || url.includes("tmall.com")) {
+                        let match = url.match(/id=(\d+)/);
+                        if (match) {
+                            id = match[1];
+                            acSource = "TB";
+                            clean = `https://item.taobao.com/item.htm?id=${id}`;
+                        }
+                    } 
+                    // Wykrywanie Weidian
+                    else if (url.includes("weidian.com")) {
+                        let match = url.match(/(?:itemid|item_id|itemID=)(\d+)/);
+                        if (match) {
+                            id = match[1];
+                            acSource = "WD";
+                            clean = `https://weidian.com/item.html?itemID=${id}`;
                         }
                     }
-                    // Weidian
-                    else if (lowUrl.includes("weidian.com")) {
-                        let m = url.match(/(?:itemid|item_id|itemID=)(\d+)/);
-                        if (m) {
-                            product_id = m[1];
-                            usf_type = "1";
-                            ac_type = "WD";
-                            clean_url = `https://weidian.com/item.html?itemID=${product_id}`;
-                        }
-                    }
-                    // 1688
-                    else if (lowUrl.includes("1688.com")) {
-                        let m = url.match(/(?:offer\/|id=)(\d+)/);
-                        if (m) {
-                            product_id = m[1];
-                            usf_type = "2";
-                            ac_type = "1688";
-                            clean_url = `https://detail.1688.com/offer/${product_id}.html`;
+                    // Wykrywanie 1688
+                    else if (url.includes("1688.com")) {
+                        let match = url.match(/(?:offer\/|id=)(\d+)/);
+                        if (match) {
+                            id = match[1];
+                            usfType = "2";
+                            acSource = "1688";
+                            clean = `https://detail.1688.com/offer/${id}.html`;
                         }
                     }
 
-                    if (!product_id) return { kako: '#', usf: '#', acb: '#', cleanUrl: url };
+                    if (!id) return { cleanUrl: url, kako: '#', usf: '#', acb: '#' };
 
-                    const encodedUrl = encodeURIComponent(clean_url);
                     return {
-                        cleanUrl: clean_url,
-                        kako: `https://www.kakobuy.com/item/details?url=${encodedUrl}&affcode=${this.aff.kakobuy}`,
-                        usf: `https://www.usfans.com/product/${usf_type}/${product_id}?inviteCode=${this.aff.usfans}`,
-                        acb: `https://m.acbuy.com/product?id=${product_id}&source=${ac_type}&inviteCode=${this.aff.acbuy}`
+                        cleanUrl: clean,
+                        kako: `https://www.kakobuy.com/item/details?url=${encodeURIComponent(clean)}&affcode=${this.aff.kakobuy}`,
+                        usf: `https://www.usfans.com/product/${usfType}/${id}?inviteCode=${this.aff.usfans}`,
+                        acb: `https://m.acbuy.com/product?id=${id}&source=${acSource}&inviteCode=${this.aff.acbuy}`
                     };
                 },
 
-                updateLinks() {
-                    if (this.inputUrl.trim()) {
-                        this.botResult = this.generateBotLinks(this.inputUrl.trim());
-                    } else {
-                        this.botResult = null;
-                    }
+                convertLink() {
+                    let res = this.processUrl(this.inputUrl);
+                    this.botResults = res && res.kako !== '#' ? res : null;
                 },
 
                 calcShipping(g, agent) {
@@ -235,7 +240,10 @@
                     let base = agent === 'kakobuy' ? (45 + (g/1000 * 62)) : (42 + (g/1000 * 59));
                     return Math.round(base * rate);
                 },
-                copyRaw(text) { navigator.clipboard.writeText(text); alert('Skopiowano RAW link!'); }
+                copyRaw(text) { 
+                    navigator.clipboard.writeText(text); 
+                    alert('Skopiowano czysty link!'); 
+                }
             }
         }
     </script>
