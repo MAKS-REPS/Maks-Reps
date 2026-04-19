@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Maks Reps | Premium Finds & Tools</title>
+    <title>Maks Reps | Premium Tools</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -44,7 +44,6 @@
         }
         .menu-card:hover .icon-box { color: #ff0000; }
 
-        /* Button Colors for Converter */
         .btn-k { background: #ff5c5c; border-radius: 10px; font-weight: 900; }
         .btn-us { background: #3b82f6; border-radius: 10px; font-weight: 900; }
         .btn-ac { background: #00d1b2; border-radius: 10px; font-weight: 900; color: #000; }
@@ -101,10 +100,10 @@
                             </div>
                             <h3 class="font-bold text-lg mb-6 px-2 truncate" x-text="product.name"></h3>
                             <div class="grid grid-cols-2 gap-3 px-1">
-                                <a :href="product.kakobuy" target="_blank" class="btn-k py-3 flex items-center justify-center text-[10px] uppercase hover:brightness-110 transition">
+                                <a :href="product.kakobuy" target="_blank" class="btn-k py-3 flex items-center justify-center text-[10px] uppercase hover:brightness-110 transition text-white">
                                     <span class="italic text-sm mr-1">K</span> Kakobuy
                                 </a>
-                                <a :href="product.usfans" target="_blank" class="btn-us py-3 flex items-center justify-center text-[10px] uppercase hover:brightness-110 transition">
+                                <a :href="product.usfans" target="_blank" class="btn-us py-3 flex items-center justify-center text-[10px] uppercase hover:brightness-110 transition text-white">
                                     <span class="logo-tag">US</span> Fans
                                 </a>
                             </div>
@@ -118,20 +117,20 @@
             <section class="max-w-3xl mx-auto px-6 animate-fade">
                 <div class="tool-card">
                     <h2 class="text-3xl font-black mb-2 uppercase">Link <span class="text-red-600">Converter</span></h2>
-                    <p class="text-gray-500 mb-8 font-medium">Wklej link agenta lub sklepu, aby otrzymać wersję afiliacyjną.</p>
+                    <p class="text-gray-500 mb-8 font-medium">Wklej dowolny link, aby otrzymać Twoje wersje afiliacyjne.</p>
                     
-                    <input type="text" x-model="inputUrl" @input="convertLink()" placeholder="Wklej link (Weidian, Kakobuy, USFans, etc.)..." class="w-full p-5 rounded-2xl mb-8 transition text-lg">
+                    <input type="text" x-model="inputUrl" @input="convertLink()" placeholder="Wklej link agenta lub sklepu..." class="w-full p-5 rounded-2xl mb-8 transition text-lg shadow-inner">
                     
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4" x-show="rawUrl" x-cloak>
-                        <a :href="generateAgentLink('kakobuy')" target="_blank" class="btn-k p-5 flex justify-between items-center">
+                        <a :href="generateAgentLink('kakobuy')" target="_blank" class="btn-k p-5 flex justify-between items-center text-white">
                             <span class="uppercase text-xs font-black"><span class="italic text-lg mr-1">K</span> Kakobuy</span>
                             <i class="fa-solid fa-arrow-right text-xs opacity-50"></i>
                         </a>
-                        <a :href="generateAgentLink('usfans')" target="_blank" class="btn-us p-5 flex justify-between items-center">
+                        <a :href="generateAgentLink('usfans')" target="_blank" class="btn-us p-5 flex justify-between items-center text-white">
                             <span class="uppercase text-xs font-black"><span class="logo-tag">US</span> USFans</span>
                             <i class="fa-solid fa-arrow-right text-xs opacity-50"></i>
                         </a>
-                        <a :href="generateAgentLink('acbuy')" target="_blank" class="btn-ac p-5 flex justify-between items-center">
+                        <a :href="generateAgentLink('acbuy')" target="_blank" class="btn-ac p-5 flex justify-between items-center text-black">
                             <span class="uppercase text-xs font-black"><span class="logo-tag !border-black">AC</span> ACBuy</span>
                             <i class="fa-solid fa-arrow-right text-xs opacity-50"></i>
                         </a>
@@ -151,8 +150,8 @@
                     <p class="text-gray-500 mb-8 font-medium italic">Szacunkowe koszty wysyłki do Polski (PLN).</p>
                     
                     <div class="mb-10 max-w-sm">
-                        <label class="block text-[10px] font-black text-gray-500 uppercase tracking-widest mb-3 px-1">Waga (Grams)</label>
-                        <input type="number" x-model="weight" placeholder="Wpisz wagę (np. 3000)" class="w-full p-5 rounded-2xl text-xl font-bold transition">
+                        <label class="block text-[10px] font-black text-gray-500 uppercase tracking-widest mb-3 px-1">Waga (Gramy)</label>
+                        <input type="number" x-model="weight" placeholder="np. 4000" class="w-full p-5 rounded-2xl text-xl font-bold transition">
                     </div>
 
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-6" x-show="weight > 0" x-cloak>
@@ -189,8 +188,6 @@
             </div>
 
             <div class="space-y-3 mb-12">
-                <p class="text-[10px] font-black text-gray-600 uppercase tracking-widest ml-1 mb-4" x-text="t.mainSection"></p>
-                
                 <div @click="view = 'products'; openMenu = false" class="menu-card flex items-center justify-between p-4 rounded-2xl group">
                     <div class="flex items-center gap-4">
                         <div class="icon-box"><i class="fa-solid fa-magnifying-glass"></i></div>
@@ -219,19 +216,6 @@
                     </div>
                 </a>
             </div>
-
-            <div class="space-y-4">
-                <p class="text-[10px] font-black text-gray-600 uppercase tracking-widest ml-1" x-text="t.settingsSection"></p>
-                <div class="menu-card p-5 rounded-3xl space-y-6 cursor-default">
-                    <div class="flex justify-between items-center">
-                        <span class="text-sm font-bold text-gray-400" x-text="t.langLabel"></span>
-                        <div class="flex gap-2">
-                            <img src="https://flagcdn.com/w40/pl.png" @click="setLang('pl')" class="w-7 rounded-sm border-2 p-0.5 cursor-pointer transition" :class="lang === 'pl' ? 'border-red-600' : 'border-transparent opacity-30'">
-                            <img src="https://flagcdn.com/w40/gb.png" @click="setLang('en')" class="w-7 rounded-sm border-2 p-0.5 cursor-pointer transition" :class="lang === 'en' ? 'border-red-600' : 'border-transparent opacity-30'">
-                        </div>
-                    </div>
-                </div>
-            </div>
         </div>
     </div>
 
@@ -246,18 +230,19 @@
                 rawUrl: '',
                 weight: '',
                 discordLink: 'https://discord.gg/DTb5mkpNuH',
-                spreadsheetLink: 'https://docs.google.com/spreadsheets/d/1ig6hVp-Jt3GeK__kzoqRLL99d0nI2QwmVsDM6-P1YY4/edit?usp=drivesdk',
-                t: {},
+                
+                // TWOJE KODY AFFILIACYJNE
                 aff: {
                     kakobuy: 'maksr3ps',
                     usfans: 'DJPZ6T',
                     acbuy: 'KV2WLD'
                 },
+
                 products: [
                     {
                         name: "Numeris",
                         pricePLN: "180", priceUSD: "45",
-                        image: "https://cdn.discordapp.com/attachments/1484846186153250898/1484846186652369029/pcitem1238871281-06220000019a9e195a380a23041a-unadjust_1080_1080.png?ex=69e3f786&is=69e2a606&hm=77bc1c07a0ac6f3283e9e17f72d0f7b9a9bc86dd61ee7a031677d35ec13c1262&",
+                        image: "https://cdn.discordapp.com/attachments/1484846186153250898/1484846186652369029/pcitem1238871281-06220000019a9e195a380a23041a-unadjust_1080_1080.png",
                         kakobuy: "https://www.kakobuy.com/item/details?url=https%3A%2F%2Fweidian.com%2Fitem.html%3FitemID%3D7614479098&affcode=maksr3ps",
                         usfans: "https://www.usfans.com/product/3/7614479098/?ref=DJPZ6T"
                     },
@@ -265,8 +250,8 @@
                         name: "Spodnie ADWYSD",
                         pricePLN: "45", priceUSD: "11",
                         image: "https://file.uufinds.com/product/2026/04/15/2044313412956188673/major/2c92808a9d6ac29f019d8fffa56c38c0.webp",
-                        kakobuy: "https://ikako.vip/ejqfc",
-                        usfans: "https://www.usfans.com/product/2/915690707683/?ref=DJPZ6T"
+                        kakobuy: "https://www.kakobuy.com/item/details?url=https%3A%2F%2Fweidian.com%2Fitem.html%3FitemID%3D7231456188&affcode=maksr3ps",
+                        usfans: "https://www.usfans.com/product/search?url=https%3A%2F%2Fweidian.com%2Fitem.html%3FitemID%3D7231456188&ref=DJPZ6T"
                     }
                 ],
 
@@ -274,9 +259,9 @@
                     let val = this.inputUrl.trim();
                     if (!val) { this.rawUrl = ''; return; }
                     
+                    // Ekstrakcja linku RAW z linków agencyjnych
                     if (val.includes('url=')) {
-                        let search = val.split('?')[1];
-                        let params = new URLSearchParams(search);
+                        let params = new URLSearchParams(val.split('?')[1]);
                         this.rawUrl = decodeURIComponent(params.get('url'));
                     } else if (val.includes('weidian.com') || val.includes('taobao.com') || val.includes('1688.com')) {
                         this.rawUrl = val;
@@ -295,7 +280,7 @@
 
                 copyRaw() {
                     navigator.clipboard.writeText(this.rawUrl);
-                    alert('Skopiowano link do sklepu!');
+                    alert('Skopiowano link RAW!');
                 },
 
                 calcShipping(g, agent) {
@@ -309,29 +294,13 @@
                 translations: {
                     pl: {
                         heroTitle: 'The Ultimate<br><span class="text-red-600">Rep</span> Community',
-                        heroSub: 'Najlepsze znaleziska i sprawdzeni agenci. Dołącz do Maks Reps już teraz.',
-                        browseBtn: 'Przeglądaj Produkty',
+                        heroSub: 'Najlepsze znaleziska i Twoi ulubieni agenci w jednym miejscu.',
+                        browseBtn: 'Przeglądaj Sklep',
                         joinDiscord: 'Dołącz do nas',
-                        latest: 'Najnowsze',
-                        mainSection: 'Główne',
-                        settingsSection: 'Ustawienia',
-                        langLabel: 'Język',
-                        currencyLabel: 'Waluta'
-                    },
-                    en: {
-                        heroTitle: 'The Ultimate<br><span class="text-red-600">Rep</span> Community',
-                        heroSub: 'Best finds and trusted agents. Join Maks Reps community now.',
-                        browseBtn: 'Browse Products',
-                        joinDiscord: 'Join Us',
-                        latest: 'Latest',
-                        mainSection: 'Main',
-                        settingsSection: 'Settings',
-                        langLabel: 'Language',
-                        currencyLabel: 'Currency'
+                        latest: 'Najnowsze'
                     }
                 },
-                init() { this.t = this.translations[this.lang]; },
-                setLang(l) { this.lang = l; this.t = this.translations[l]; }
+                init() { this.t = this.translations['pl']; }
             }
         }
     </script>
