@@ -23,12 +23,14 @@
         .menu-tile:hover { background-color: #161616; border-color: #333; }
         .menu-icon-box { background-color: #1a1a1a; width: 44px; height: 44px; display: flex; align-items: center; justify-content: center; border-radius: 12px; color: #666; font-size: 18px; }
 
-        .agent-btn { border-radius: 10px; font-weight: 900; text-transform: uppercase; font-size: 11px; transition: 0.2s; padding: 10px 14px; width: 100%; display: flex; align-items: center; gap: 12px; }
+        /* NOWY STYL PRZYCISKÓW - BEZ KÓŁKA, WIĘKSZE IKONY */
+        .agent-btn { border-radius: 12px; font-weight: 900; text-transform: uppercase; font-size: 12px; transition: 0.2s; padding: 12px 16px; width: 100%; display: flex; align-items: center; gap: 14px; border: 1px solid rgba(255,255,255,0.05); }
         .btn-kako { background-color: #ff5c5c; color: white; }
         .btn-usf { background-color: #3b82f6; color: white; }
         .btn-acb { background-color: #00d1b2; color: #000; }
         
-        .agent-logo { width: 24px; height: 24px; border-radius: 50%; object-fit: cover; border: 1px solid rgba(255,255,255,0.2); flex-shrink: 0; background-color: #000; }
+        /* Ikonka bez kółka i ramki, lekko większa */
+        .agent-logo { width: 32px; height: 32px; object-fit: contain; flex-shrink: 0; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2)); }
 
         .flag-icon { width: 28px; cursor: pointer; opacity: 0.3; transition: 0.2s; border: 2px solid transparent; padding: 1px; }
         .flag-icon.active { opacity: 1; border-color: #ff0000; border-radius: 4px; }
@@ -100,21 +102,21 @@
                     <div class="space-y-3" x-show="botResult" x-cloak>
                         <div class="p-4 bg-white/5 rounded-xl border border-white/10 text-xs font-mono text-red-400 truncate mb-4" x-text="botResult.cleanUrl"></div>
                         
-                        <div class="grid grid-cols-1 gap-3">
+                        <div class="grid grid-cols-1 gap-4">
                             <a :href="botResult.kako" target="_blank" class="agent-btn btn-kako">
-                                <img src="image.png-5ecbb510-85c1-4fb6-9c45-2dbf4ff78ca8.png" class="agent-logo" onerror="this.src='https://www.kakobuy.com/favicon.ico'">
-                                <span class="flex-grow">Kakobuy</span>
-                                <i class="fa-solid fa-arrow-right opacity-30"></i>
-                            </a>
-                            <a :href="botResult.usf" target="_blank" class="agent-btn btn-usf">
-                                <img src="image.png-0d64306f-046b-477c-a269-928787ac2f09.png" class="agent-logo" onerror="this.src='https://www.usfans.com/favicon.ico'">
-                                <span class="flex-grow">USFans</span>
-                                <i class="fa-solid fa-arrow-right opacity-30"></i>
+                                <img src="image.png-5ecbb510-85c1-4fb6-9c45-2dbf4ff78ca8" class="agent-logo" onerror="this.src='https://www.kakobuy.com/favicon.ico'">
+                                <span class="flex-grow">Przejdź do Kakobuy</span>
+                                <i class="fa-solid fa-chevron-right opacity-40"></i>
                             </a>
                             <a :href="botResult.acb" target="_blank" class="agent-btn btn-acb">
-                                <img src="image.png-3eda17a6-4afd-446e-aa94-831bd9860af7.png" class="agent-logo" onerror="this.src='https://m.acbuy.com/favicon.ico'">
-                                <span class="flex-grow">ACBuy</span>
-                                <i class="fa-solid fa-arrow-right opacity-30"></i>
+                                <img src="image.png-3eda17a6-4afd-446e-aa94-831bd9860af7" class="agent-logo" onerror="this.src='https://m.acbuy.com/favicon.ico'">
+                                <span class="flex-grow">Przejdź do ACBuy</span>
+                                <i class="fa-solid fa-chevron-right opacity-40"></i>
+                            </a>
+                            <a :href="botResult.usf" target="_blank" class="agent-btn btn-usf">
+                                <img src="image.png-0d64306f-046b-477c-a269-928787ac2f09" class="agent-logo" onerror="this.src='https://www.usfans.com/favicon.ico'">
+                                <span class="flex-grow">Przejdź do USFans</span>
+                                <i class="fa-solid fa-chevron-right opacity-40"></i>
                             </a>
                         </div>
                     </div>
