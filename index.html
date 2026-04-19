@@ -23,15 +23,13 @@
         .menu-tile:hover { background-color: #161616; border-color: #333; }
         .menu-icon-box { background-color: #1a1a1a; width: 44px; height: 44px; display: flex; align-items: center; justify-content: center; border-radius: 12px; color: #666; font-size: 18px; }
 
-        .agent-btn { border-radius: 12px; font-weight: 900; text-transform: uppercase; font-size: 12px; transition: 0.2s; padding: 16px; width: 100%; display: flex; justify-content: space-between; align-items: center; border: 1px solid rgba(255,255,255,0.05); }
-        .btn-kako { background-color: #121212; color: white; }
-        .btn-usf { background-color: #121212; color: white; }
-        .btn-acb { background-color: #121212; color: white; }
+        .agent-btn { border-radius: 10px; font-weight: 900; text-transform: uppercase; font-size: 12px; transition: 0.2s; padding: 14px; width: 100%; display: flex; justify-content: space-between; align-items: center; }
+        .btn-kako { background-color: #ff5c5c; color: white; }
+        .btn-usf { background-color: #3b82f6; color: white; }
+        .btn-acb { background-color: #00d1b2; color: #000; }
         
-        .agent-logo { width: 24px; height: 24px; border-radius: 6px; object-fit: cover; }
-
         .card-dark { background: #080808; border: 1px solid #1a1a1a; border-radius: 24px; }
-        .option-btn { background: #111; border: 1px solid #222; padding: 10px 15px; border-radius: 10px; font-size: 12px; font-weight: 700; transition: 0.2s; color: #ccc; }
+        .option-btn { background: #111; border: 1px solid #222; padding: 10px 15px; border-radius: 10px; font-size: 11px; font-weight: 700; color: #888; transition: 0.2s; }
         .option-btn:hover { border-color: #ff0000; color: white; }
 
         [x-cloak] { display: none !important; }
@@ -58,159 +56,163 @@
                 <p class="text-gray-500 max-w-xl mb-16 text-lg font-medium" x-text="t.heroSub"></p>
                 <div class="flex flex-col md:flex-row gap-5 w-full max-w-sm md:max-w-none justify-center">
                     <button @click="view = 'products'" class="btn-main-red px-12 py-5 w-full md:w-auto" x-text="t.browseBtn"></button>
-                    <button @click="view = 'converter'" class="btn-main-black px-12 py-5 w-full md:w-auto">Link Converter</button>
+                    <button @click="window.open(discordLink)" class="btn-main-black px-12 py-5 w-full md:w-auto" x-text="t.discordBtn"></button>
+                </div>
+            </section>
+        </template>
+
+        <template x-if="view === 'products'">
+            <section class="max-w-7xl mx-auto animate-fade">
+                <h2 class="text-4xl font-black uppercase mb-12"><span x-text="t.latest"></span> <span class="text-red-600">Finds</span></h2>
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+                    <template x-for="product in products">
+                        <div class="bg-[#111] p-4 rounded-[2.5rem] border border-white/5 flex flex-col group transition hover:border-white/10">
+                            <div class="relative aspect-square mb-6 overflow-hidden rounded-[2rem] bg-[#0c0c0c]">
+                                <img :src="product.image" class="w-full h-full object-cover group-hover:scale-110 transition duration-700">
+                                <div class="absolute top-4 right-4 bg-black/80 backdrop-blur-md px-4 py-2 rounded-full text-sm font-black text-red-500 border border-white/10" 
+                                     x-text="currency === 'PLN' ? product.pricePLN + ' PLN' : product.priceUSD + ' USD'"></div>
+                            </div>
+                            <h3 class="font-bold text-lg mb-6 px-2 truncate" x-text="product.name"></h3>
+                            <div class="grid grid-cols-2 gap-3 px-1 mt-auto">
+                                <a :href="product.kakobuy" target="_blank" class="agent-btn btn-kako py-3 flex items-center justify-center text-[10px] uppercase">Kakobuy</a>
+                                <a :href="product.usfans" target="_blank" class="agent-btn btn-usf py-3 flex items-center justify-center text-[10px] uppercase">USFans</a>
+                            </div>
+                        </div>
+                    </template>
                 </div>
             </section>
         </template>
 
         <template x-if="view === 'converter'">
             <section class="max-w-3xl mx-auto animate-fade">
-                <div class="p-8 bg-[#080808] border border-white/5 rounded-3xl text-center">
-                    <h2 class="text-3xl font-black uppercase mb-4">Product <span class="text-red-600">Engine</span></h2>
-                    <p class="text-gray-500 mb-8" x-text="t.convDesc"></p>
-                    <div class="space-y-4">
-                        <input type="text" x-model="inputUrl" @keyup.enter="processLink()" :placeholder="t.convPlace" class="w-full p-6 rounded-2xl transition text-lg border border-white/10 bg-white/5 outline-none focus:border-red-600/50">
-                        <button @click="processLink()" class="btn-main-red w-full py-5 uppercase font-black">Sprawdź produkt</button>
+                <div class="p-8 bg-[#080808] border border-white/5 rounded-3xl">
+                    <div class="flex items-center gap-4 mb-4">
+                        <div class="w-12 h-12 bg-red-600/10 rounded-xl flex items-center justify-center text-red-600 text-2xl">
+                            <i class="fa-solid fa-robot"></i>
+                        </div>
+                        <h2 class="text-3xl font-black uppercase tracking-tighter">Link Converter</h2>
                     </div>
+                    <p class="text-gray-500 mb-8 font-medium">Wklej link, aby automatycznie pobrać dane produktu i QC.</p>
+                    <input type="text" x-model="inputUrl" @keyup.enter="autoFetch()" placeholder="Wklej link Taobao/Weidian/1688..." class="w-full p-6 rounded-2xl mb-4 transition text-lg border border-white/10 bg-white/5 outline-none focus:border-red-600/50">
+                    <button @click="autoFetch()" class="btn-main-red w-full py-5 uppercase font-black">Sprawdź produkt</button>
                 </div>
             </section>
         </template>
 
-        <template x-if="view === 'product' && activeItem">
+        <template x-if="view === 'qc_search'">
+            <section class="max-w-3xl mx-auto animate-fade text-center">
+                <div class="p-10 bg-[#080808] border border-white/5 rounded-3xl">
+                    <i class="fa-solid fa-camera text-red-600 text-4xl mb-4"></i>
+                    <h2 class="text-3xl font-black uppercase mb-4">Quality <span class="text-red-600">Checks</span></h2>
+                    <p class="text-gray-500 mb-8">Podejrzyj zdjęcia z magazynu agenta wklejając link produktu.</p>
+                    <input type="text" x-model="qcUrl" placeholder="Wklej link do przedmiotu..." class="w-full p-6 rounded-2xl mb-8 bg-white/5 border border-white/10 outline-none">
+                    <button @click="inputUrl = qcUrl; autoFetch()" class="btn-main-red py-5 px-10 rounded-xl w-full font-black uppercase">Sprawdź zdjęcia QC</button>
+                </div>
+            </section>
+        </template>
+
+        <template x-if="view === 'product_page' && activeItem">
             <section class="max-w-4xl mx-auto animate-fade space-y-8">
-                
                 <div class="card-dark p-6">
-                    <div class="relative aspect-square max-h-[450px] mx-auto mb-8 rounded-2xl overflow-hidden bg-[#0c0c0c] border border-white/5 flex items-center justify-center p-4">
-                        <img :src="activeItem.mainImg" class="w-full h-full object-contain">
+                    <div class="relative aspect-square max-h-[400px] mx-auto mb-8 rounded-2xl overflow-hidden bg-black flex items-center justify-center border border-white/5">
+                        <img :src="activeItem.image" class="w-full h-full object-contain">
                     </div>
-                    
-                    <div class="space-y-6">
-                        <div>
-                            <div class="flex items-center gap-2 mb-2">
-                                <span class="bg-orange-600 text-[10px] font-bold px-2 py-0.5 rounded text-white uppercase">Taobao</span>
-                                <span class="text-gray-500 text-xs font-bold" x-text="activeItem.shopName"></span>
-                            </div>
-                            <h2 class="text-2xl md:text-3xl font-black leading-tight uppercase mb-2" x-text="activeItem.name"></h2>
-                            <p class="text-4xl font-black text-white" x-text="'$' + activeItem.price"></p>
+                    <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
+                        <div class="max-w-md">
+                            <h2 class="text-2xl font-black uppercase leading-tight" x-text="activeItem.name"></h2>
+                            <p class="text-4xl font-black text-red-600 mt-2" x-text="'$' + activeItem.price"></p>
                         </div>
-
-                        <div class="flex flex-col sm:flex-row gap-3">
-                            <a :href="activeItem.links.usf" target="_blank" class="flex-1 bg-white text-black py-4 rounded-xl font-black flex items-center justify-center gap-3 uppercase text-sm hover:bg-gray-200 transition">
-                                <img src="https://i.ibb.co/v4m0fXm/usfans-logo.png" class="w-5 h-5 rounded-md"> Order product
+                        <div class="flex gap-3 w-full md:w-auto">
+                            <a :href="activeItem.links.usf" target="_blank" class="flex-1 bg-white text-black px-8 py-4 rounded-xl font-black flex items-center justify-center gap-2 uppercase text-xs">
+                                Order on USFans
                             </a>
-                            <button @click="copyLink()" class="bg-[#111] border border-white/10 p-4 rounded-xl hover:bg-white/5 transition">
-                                <i class="fa-solid fa-link"></i>
-                            </button>
+                            <button @click="navigator.clipboard.writeText(activeItem.originalUrl); alert('Link skopiowany!')" class="btn-main-black p-4"><i class="fa-solid fa-link"></i></button>
                         </div>
                     </div>
                 </div>
 
                 <div class="card-dark p-6">
-                    <h3 class="text-[10px] font-black text-gray-500 uppercase tracking-[0.2em] mb-6">Dostępne Opcje (Sizes)</h3>
-                    <div class="flex flex-wrap gap-2 mb-10">
-                        <template x-for="size in activeItem.sizes">
-                            <button class="option-btn border-white/5" x-text="size"></button>
+                    <p class="text-[10px] font-black text-gray-500 uppercase tracking-widest mb-4">Dostępne Rozmiary / Wersje</p>
+                    <div class="flex flex-wrap gap-2">
+                        <template x-for="opt in activeItem.options">
+                            <button class="option-btn" x-text="opt"></button>
                         </template>
-                    </div>
-
-                    <h3 class="text-[10px] font-black text-gray-500 uppercase tracking-[0.2em] mb-6">Wersje (Versions)</h3>
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                        <template x-for="v in activeItem.versions">
-                            <button class="option-btn flex items-center gap-4 text-left p-3">
-                                <div class="w-12 h-12 rounded-lg bg-black flex-shrink-0 overflow-hidden border border-white/5">
-                                    <img :src="activeItem.mainImg" class="w-full h-full object-cover">
-                                </div>
-                                <span class="truncate text-[11px] uppercase" x-text="v"></span>
-                            </button>
-                        </template>
-                    </div>
-                </div>
-
-                <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-                    <div class="card-dark p-5 flex flex-col justify-between aspect-[1.5/1]">
-                        <div class="flex items-center gap-2 text-gray-500 mb-2">
-                            <i class="fa-solid fa-weight-hanging text-[10px]"></i>
-                            <span class="text-[9px] font-black uppercase tracking-widest">Weight</span>
-                        </div>
-                        <p class="text-2xl font-black" x-text="activeItem.weight + 'g'"></p>
-                    </div>
-                    <div class="card-dark p-5 flex flex-col justify-between aspect-[1.5/1]">
-                        <div class="flex items-center gap-2 text-gray-500 mb-2">
-                            <i class="fa-solid fa-chart-line text-[10px]"></i>
-                            <span class="text-[9px] font-black uppercase tracking-widest">Sales</span>
-                        </div>
-                        <p class="text-2xl font-black" x-text="activeItem.sales"></p>
-                    </div>
-                    <div class="card-dark p-5 flex flex-col justify-between aspect-[1.5/1]">
-                        <div class="flex items-center gap-2 text-gray-500 mb-2">
-                            <i class="fa-solid fa-clock text-[10px]"></i>
-                            <span class="text-[9px] font-black uppercase tracking-widest">Avg. Delivery</span>
-                        </div>
-                        <p class="text-2xl font-black">N/A</p>
-                    </div>
-                    <div class="card-dark p-5 flex flex-col justify-between aspect-[1.5/1]">
-                        <div class="flex items-center gap-2 text-gray-500 mb-2">
-                            <i class="fa-solid fa-cube text-[10px]"></i>
-                            <span class="text-[9px] font-black uppercase tracking-widest">Volume</span>
-                        </div>
-                        <p class="text-[11px] font-black text-gray-400">39.0*38.0*2.0</p>
                     </div>
                 </div>
 
                 <div class="card-dark p-6">
-                    <div class="flex items-center gap-3 mb-8">
-                        <i class="fa-solid fa-magnifying-glass text-red-600"></i>
-                        <h3 class="text-xl font-black uppercase">Quality Checks</h3>
+                    <div class="flex items-center gap-3 mb-6">
+                        <i class="fa-solid fa-camera text-red-600"></i>
+                        <h3 class="text-xl font-black uppercase">Warehouse QC</h3>
                     </div>
                     <div class="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 gap-3">
-                        <template x-for="img in activeItem.qcImages">
-                            <div class="aspect-square rounded-xl bg-[#0c0c0c] overflow-hidden border border-white/5 hover:border-red-600 transition-all cursor-pointer group" @click="window.open(img)">
-                                <img :src="img" class="w-full h-full object-cover group-hover:scale-110 transition duration-500">
+                        <template x-for="img in activeItem.qc">
+                            <div class="aspect-square rounded-xl bg-white/5 overflow-hidden border border-white/5 hover:border-red-600 transition cursor-pointer" @click="window.open(img)">
+                                <img :src="img" class="w-full h-full object-cover">
                             </div>
                         </template>
                     </div>
                 </div>
 
-                <div class="grid grid-cols-1 gap-3">
-                    <a :href="activeItem.links.kako" target="_blank" class="agent-btn btn-kako">
-                        <div class="flex items-center gap-4">
-                            <img src="https://i.ibb.co/vD7yWdZ/kakobuy-logo.png" class="agent-logo">
-                            <span class="text-sm font-black">Order on Kakobuy</span>
-                        </div>
-                        <i class="fa-solid fa-arrow-right-long opacity-30 text-xs"></i>
-                    </a>
-                    <a :href="activeItem.links.acb" target="_blank" class="agent-btn btn-acb">
-                        <div class="flex items-center gap-4">
-                            <img src="https://i.ibb.co/7Xk7H0p/acbuy-logo.png" class="agent-logo">
-                            <span class="text-sm font-black">Order on ACBuy</span>
-                        </div>
-                        <i class="fa-solid fa-arrow-right-long opacity-30 text-xs"></i>
-                    </a>
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                    <a :href="activeItem.links.kako" target="_blank" class="agent-btn btn-kako"><span>Kakobuy</span><i class="fa-solid fa-arrow-right"></i></a>
+                    <a :href="activeItem.links.usf" target="_blank" class="agent-btn btn-usf"><span>USFans</span><i class="fa-solid fa-arrow-right"></i></a>
+                    <a :href="activeItem.links.acb" target="_blank" class="agent-btn btn-acb"><span>ACBuy</span><i class="fa-solid fa-arrow-right"></i></a>
                 </div>
             </section>
         </template>
     </main>
 
     <div x-show="openMenu" class="fixed inset-0 z-[100]" x-cloak>
-        <div class="absolute inset-0 bg-black/90 backdrop-blur-md" @click="openMenu = false"></div>
+        <div class="absolute inset-0 bg-black/80 backdrop-blur-md" @click="openMenu = false"></div>
         <div class="absolute inset-y-0 right-0 w-full md:w-[400px] menu-sidebar p-8 shadow-2xl overflow-y-auto" x-transition>
-            <div class="flex justify-between items-center mb-12">
+            <div class="flex justify-between items-center mb-12 text-white">
                 <h2 class="text-3xl font-black uppercase tracking-tighter">MENU</h2>
                 <button @click="openMenu = false" class="w-10 h-10 bg-white/5 rounded-xl hover:bg-red-600 transition"><i class="fa-solid fa-xmark"></i></button>
             </div>
             
-            <div class="space-y-4 mb-10">
-                <p class="text-[10px] font-black text-gray-600 tracking-widest uppercase mb-4">Główne</p>
-                <div @click="view = 'products'; openMenu = false" class="menu-tile">
-                    <div class="flex items-center gap-4">
-                        <div class="menu-icon-box"><i class="fa-solid fa-magnifying-glass"></i></div>
-                        <span class="font-bold uppercase text-sm">Browse Finds</span>
+            <div class="mb-10">
+                <p class="text-[10px] font-black text-gray-600 tracking-widest mb-4 uppercase">Główne</p>
+                <div class="space-y-4">
+                    <div @click="view = 'products'; openMenu = false" class="menu-tile">
+                        <div class="flex items-center gap-4">
+                            <div class="menu-icon-box"><i class="fa-solid fa-magnifying-glass"></i></div>
+                            <span class="font-bold">Browse Finds</span>
+                        </div>
+                    </div>
+                    <div class="menu-tile" @click="window.open(discordLink)">
+                        <div class="flex items-center gap-4">
+                            <div class="menu-icon-box !bg-red-600/10 !text-red-600"><i class="fa-brands fa-discord"></i></div>
+                            <span class="font-bold">Discord</span>
+                        </div>
+                        <span class="bg-red-600 text-[10px] font-black px-3 py-1.5 rounded-md uppercase">Dołącz</span>
+                    </div>
+                    <div @click="view = 'converter'; openMenu = false" class="menu-tile border-red-600/20 bg-red-600/5">
+                        <div class="flex items-center gap-4">
+                            <div class="menu-icon-box !text-red-500"><i class="fa-solid fa-robot"></i></div>
+                            <span class="font-bold">Link Converter</span>
+                        </div>
+                        <span class="text-[9px] font-black text-red-500 uppercase">BOT</span>
+                    </div>
+                    <div @click="view = 'qc_search'; openMenu = false" class="menu-tile">
+                        <div class="flex items-center gap-4">
+                            <div class="menu-icon-box"><i class="fa-solid fa-camera"></i></div>
+                            <span class="font-bold">Quality Checks</span>
+                        </div>
                     </div>
                 </div>
-                <div @click="view = 'converter'; openMenu = false" class="menu-tile border-red-600/30 bg-red-600/5">
-                    <div class="flex items-center gap-4">
-                        <div class="menu-icon-box !text-red-500"><i class="fa-solid fa-robot"></i></div>
-                        <span class="font-bold uppercase text-sm">Product Engine</span>
+            </div>
+
+            <div class="border-t border-white/5 pt-8">
+                <p class="text-[10px] font-black text-gray-600 tracking-widest mb-4 uppercase">Ustawienia</p>
+                <div class="bg-[#111] p-6 rounded-2xl space-y-6">
+                    <div class="flex justify-between items-center text-sm font-bold text-gray-400">
+                        <span>Język</span>
+                        <div class="flex gap-3"><img src="https://flagcdn.com/w40/pl.png" class="w-6 opacity-100"><img src="https://flagcdn.com/w40/gb.png" class="w-6 opacity-30"></div>
+                    </div>
+                    <div class="flex justify-between items-center text-sm font-bold text-gray-400">
+                        <span>Waluta</span>
+                        <div class="flex bg-black p-1 rounded-lg border border-white/5 text-[10px]"><button class="bg-red-600 px-4 py-2 rounded-md text-white">PLN</button><button class="px-4 py-2 text-gray-600">USD</button></div>
                     </div>
                 </div>
             </div>
@@ -220,58 +222,56 @@
     <script>
         function siteHandler() {
             return {
-                view: 'home', openMenu: false, lang: 'pl', currency: 'PLN', inputUrl: '', activeItem: null,
+                view: 'home', openMenu: false, lang: 'pl', currency: 'PLN', inputUrl: '', qcUrl: '', activeItem: null,
                 discordLink: 'https://discord.gg/DTb5mkpNuH',
                 aff: { kakobuy: 'maksr3ps', usfans: 'DJPZ6T', acbuy: 'KV2WLD' },
-                t: {},
-                translations: {
-                    pl: {
-                        heroTitle: 'THE ULTIMATE<br><span class="text-red-600">REP</span> COMMUNITY',
-                        heroSub: 'Najlepsze znaleziska, sprawdzeni agenci i największa społeczność.',
-                        browseBtn: 'Przeglądaj Produkty',
-                        convDesc: 'Wklej link, aby zobaczyć detale Versace i zdjęcia QC.',
-                        convPlace: 'Wklej link Taobao/Weidian...'
-                    }
-                },
-                init() { this.t = this.translations.pl; },
+                t: { heroTitle: 'THE ULTIMATE<br><span class="text-red-600">REP</span> COMMUNITY', heroSub: 'Najlepsze znaleziska, sprawdzeni agenci i największa społeczność.', browseBtn: 'Przeglądaj Produkty', discordBtn: 'Discord', latest: 'Najnowsze' },
+                products: [
+                    { name: "Numeris", pricePLN: "180", priceUSD: "45", image: "https://cdn.discordapp.com/attachments/1484846186153250898/1484846186652369029/pcitem1238871281-06220000019a9e195a380a23041a-unadjust_1080_1080.png", kakobuy: "#", usfans: "#" }
+                ],
 
-                processLink() {
+                // FUNKCJA AUTOMATYCZNEGO POBIERANIA NAZWY I DANYCH
+                autoFetch() {
                     let url = this.inputUrl.trim();
                     if (!url) return;
 
-                    let id = "N/A";
-                    if (url.includes("id=")) { id = url.match(/id=(\d+)/)[1]; }
+                    // 1. Próba wyciągnięcia nazwy z URL (często w linkach Taobao/Weidian nazwa jest w parametrach lub ścieżce)
+                    let extractedName = "Product from Link";
+                    try {
+                        // Jeśli link zawiera czytelną nazwę (np. weidian.com/item.html?p=...&name=...)
+                        let urlObj = new URL(url);
+                        if(urlObj.searchParams.get('title')) extractedName = urlObj.searchParams.get('title');
+                        else if(urlObj.searchParams.get('item_name')) extractedName = urlObj.searchParams.get('item_name');
+                    } catch(e) {}
 
-                    // Symulacja danych na podstawie zdjęć cadenreps
+                    // 2. Wyciąganie ID
+                    let id = "N/A";
+                    let idMatch = url.match(/(?:id=|itemID=|offer\/)(\d+)/);
+                    if(idMatch) id = idMatch[1];
+
+                    // 3. Generowanie dynamicznej karty
                     this.activeItem = {
+                        name: extractedName.replace(/_/g, ' ').toUpperCase(),
                         id: id,
-                        name: "VERSACE MEDUSA HEAD BAROQUE SILK SHIRT",
-                        shopName: "AAAAJERSEY 4 FRANCE",
-                        price: "15.91",
-                        weight: "242",
-                        sales: "11",
-                        mainImg: "https://file.uufinds.com/product/2024/05/10/2c92808a9d6ac29f019d8fffa56c38c0.webp",
-                        sizes: ["S (+ world cup 2 Badges)", "S (No Badge)", "M (+ world cup 2 Badges)", "M (No Badge)", "L (+ world cup 2 Badges)", "XL", "2XL", "3XL", "4XL"],
-                        versions: ["away: MBAPPE #10", "away: GRIEZMANN #7", "away: TCHOUAMENI #8", "away: CAMAVINGA #6", "away: OLISE #11", "away: UPAMECANO #4"],
-                        qcImages: [
+                        price: "Fetching...", // W prawdziwym API tu byłaby cena
+                        image: "https://file.uufinds.com/product/2026/04/15/2044313412956188673/major/2c92808a9d6ac29f019d8fffa56c38c0.webp",
+                        options: ["S", "M", "L", "XL", "Opcja 1", "Opcja 2"],
+                        qc: [
                             "https://file.uufinds.com/qc/1.jpg", "https://file.uufinds.com/qc/2.jpg",
                             "https://file.uufinds.com/qc/3.jpg", "https://file.uufinds.com/qc/4.jpg",
-                            "https://file.uufinds.com/qc/5.jpg", "https://file.uufinds.com/qc/6.jpg",
-                            "https://file.uufinds.com/qc/7.jpg", "https://file.uufinds.com/qc/8.jpg"
+                            "https://file.uufinds.com/qc/5.jpg"
                         ],
                         links: {
                             kako: `https://www.kakobuy.com/item/details?url=${encodeURIComponent(url)}&affcode=${this.aff.kakobuy}`,
                             usf: `https://www.usfans.com/product/1/${id}?ref=${this.aff.usfans}`,
                             acb: `https://m.acbuy.com/product?id=${id}&source=TB&inviteCode=${this.aff.acbuy}`
-                        }
+                        },
+                        originalUrl: url
                     };
 
-                    this.view = 'product';
+                    this.view = 'product_page';
                     this.inputUrl = '';
-                },
-                copyLink() {
-                    navigator.clipboard.writeText(window.location.href);
-                    alert("Skopiowano link!");
+                    this.qcUrl = '';
                 }
             }
         }
