@@ -95,18 +95,13 @@
 </template>
 
 <script>
-    /* UWAGA: Poniższe zmienne i funkcję dodaj do obiektu zwracanego przez siteHandler() 
-       
-       Zmienne w return { ... }:
-       qcUrl: '',
-       qcImages: [],
-       loadingQC: false,
-       qcError: '',
-       fullImg: null,
-
-       Funkcja w return { ... }:
-    */
-    async fetchQC() {
+    /**
+     * Logika ta powinna zostać wstrzyknięta do obiektu siteHandler() 
+     * w pliku głównym lub zainicjowana tutaj, jeśli qc.html jest osobnym widokiem.
+     */
+    
+    // Dodaj to do metod w siteHandler:
+    async function fetchQC() {
         if (!this.qcUrl) return;
         this.loadingQC = true;
         this.qcError = '';
@@ -119,14 +114,12 @@
             
             let foundImages = [];
             
-            // Obsługa różnych struktur API (Taobao vs Weidian)
             if (Array.isArray(data)) {
                 foundImages = data;
             } else {
                 foundImages = data.images || data.data || data.photos || [];
             }
 
-            // Mapowanie na czyste linki
             this.qcImages = foundImages.map(img => {
                 if (typeof img === 'string') return img;
                 if (img && typeof img === 'object') {
@@ -145,4 +138,3 @@
         }
     }
 </script>
-
