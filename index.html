@@ -40,6 +40,11 @@
 </head>
 <body x-data="siteHandler()">
 
+    <div x-show="fullImg" class="fixed inset-0 z-[200] bg-black/95 backdrop-blur-md flex items-center justify-center p-4" x-cloak x-transition @click="fullImg = null">
+        <button class="absolute top-6 right-6 text-white text-3xl"><i class="fa-solid fa-xmark"></i></button>
+        <img :src="fullImg" class="max-w-full max-h-[90vh] object-contain rounded-xl shadow-2xl" @click.stop>
+    </div>
+
     <nav class="fixed w-full z-50 px-6 py-5 flex justify-between items-center bg-black/80 backdrop-blur-xl border-b border-white/5">
         <div class="text-2xl font-black tracking-tighter cursor-pointer uppercase" @click="view = 'home'">
             MAKS<span class="text-red-600">REPS</span>
@@ -121,8 +126,44 @@
             </section>
         </template>
 
-        <div x-show="view === 'qc'">
-            </div>
+        <template x-if="view === 'qc'">
+            <section class="max-w-3xl mx-auto animate-fade text-center px-4">
+                <div class="p-8 bg-[#080808] border border-white/5 rounded-3xl">
+                    <div class="mb-6">
+                        <i class="fa-solid fa-camera text-red-600 text-4xl mb-4"></i>
+                        <h2 class="text-3xl font-black uppercase">Quality <span class="text-red-600">Checks</span></h2>
+                        <p class="text-gray-500 mt-2" x-text="t.qcDesc"></p>
+                    </div>
+                    
+                    <div class="space-y-4">
+                        <input type="text" x-model="qcUrl" @keydown.enter="fetchQC()" 
+                               placeholder="Wklej link (Taobao, Weidian, 1688...)" 
+                               class="w-full p-6 rounded-2xl bg-white/5 border border-white/10 outline-none text-center text-white focus:border-red-600/50 transition text-lg">
+                        
+                        <button @click="fetchQC()" 
+                                class="btn-main-red py-5 px-10 rounded-xl w-full flex items-center justify-center gap-3 transition-all" 
+                                :disabled="loadingQC">
+                            <template x-if="!loadingQC">
+                                <span class="font-black" x-text="t.qcBtn"></span>
+                            </template>
+                            <template x-if="loadingQC">
+                                <i class="fa-solid fa-circle-notch animate-spin text-xl"></i>
+                            </template>
+                        </button>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-3 mt-8" x-show="qcImages.length > 0" x-cloak>
+                        <template x-for="img in qcImages" :key="img">
+                            <div class="relative rounded-xl overflow-hidden aspect-square border border-white/10 cursor-pointer group" @click="fullImg = img">
+                                <img :src="img" class="w-full h-full object-cover transition duration-300 group-hover:scale-105" loading="lazy">
+                            </div>
+                        </template>
+                    </div>
+
+                    <div x-show="qcError" class="mt-6 p-4 bg-red-600/10 border border-red-600/20 rounded-xl text-red-500 font-bold" x-text="qcError" x-cloak></div>
+                </div>
+            </section>
+        </template>
 
     </main>
 
@@ -182,22 +223,20 @@
     <script>
         function siteHandler() {
             return {
-                // --- PODSTAWOWE ---
                 view: 'home', openMenu: false, lang: 'pl', currency: 'PLN', 
                 discordLink: 'https://discord.gg/DTb5mkpNuH',
 
-                // --- QC (Zmienne dodane) ---
+                // QC LOGIKA
                 qcUrl: '', 
                 qcImages: [], 
                 loadingQC: false, 
                 qcError: '', 
                 fullImg: null,
 
-                // --- CONVERTER ---
+                // CONVERTER
                 inputUrl: '', botResult: null, 
                 aff: { kakobuy: 'maksr3ps', usfans: 'DJPZ6T', acbuy: 'KV2WLD' },
 
-                // --- TRANSLACJE ---
                 t: {},
                 translations: {
                     pl: {
@@ -245,7 +284,6 @@
                 init() { this.setLang(this.lang); },
                 setLang(l) { this.lang = l; this.t = this.translations[l]; },
 
-                // --- QC LOGIKA (Dodana) ---
                 async fetchQC() {
                     if (!this.qcUrl) return;
                     this.loadingQC = true;
@@ -269,7 +307,6 @@
                     }
                 },
 
-                // --- CONVERTER LOGIKA ---
                 convertLink() {
                     let url = this.inputUrl.trim();
                     if (!url) { this.botResult = null; return; }
